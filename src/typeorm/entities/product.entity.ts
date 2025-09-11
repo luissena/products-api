@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+const PRODUCT_INTEGRATION_EXTERNAL_ID_IDX =
+  'idx_products_integration_external_id';
+@Unique(PRODUCT_INTEGRATION_EXTERNAL_ID_IDX, ['externalId', 'integration'])
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')

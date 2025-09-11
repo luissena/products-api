@@ -5,6 +5,7 @@ import { EntityFilters } from 'src/shared/types/filter';
 import { EntityOrders } from 'src/shared/types/order';
 import { adaptFiltersToTypeormFilters } from 'src/typeorm/adapters';
 import { Product } from 'src/typeorm/entities/product.entity';
+import { UpsertProduct } from 'src/typeorm/types';
 import { Repository } from 'typeorm';
 
 export type ListProductsRequest = {
@@ -17,11 +18,11 @@ export type ListProductsRequest = {
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    private readonly productsRepository: Repository<Product>,
   ) {}
 
   async list({ pagination, filters, order }: ListProductsRequest) {
-    const [results, total] = await this.productRepository.findAndCount({
+    const [results, total] = await this.productsRepository.findAndCount({
       where: adaptFiltersToTypeormFilters(filters),
       skip: pagination.skip,
       take: pagination.limit,
@@ -35,5 +36,15 @@ export class ProductsService {
         ...pagination,
       },
     };
+  }
+
+  async upsert(product: UpsertProduct) {
+    await this.productsRepository.upsert(product, {
+      conflictPaths: ['integration', 'externalId'],
+    });
+  }
+
+  async deleteAll() {
+    await this.productsRepository.deleteAll();
   }
 }
