@@ -1,0 +1,3 @@
+export const LIST_PRODUCTS_DEFAULT_SKIP = 0;
+export const LIST_PRODUCTS_DEFAULT_LIMIT = 5;
+export const LIST_PRODUCTS_MAX_LIMIT = 5;

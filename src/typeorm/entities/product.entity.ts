@@ -1,0 +1,49 @@
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class Product {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'varchar', length: 50 })
+  sku: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  name: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  brand: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  model: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  category: string;
+
+  @Column({ type: 'varchar', length: 50 })
+  color: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  price: number;
+
+  @Column({ type: 'varchar', length: 3 })
+  currency: string;
+
+  @Column({ type: 'int' })
+  stock: number;
+
+  @Column({ type: 'varchar', length: 36 })
+  externalId: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  integration: string;
+
+  @Column({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamptz' })
+  updatedAt: Date;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  deletedAt?: Date | null;
+}
