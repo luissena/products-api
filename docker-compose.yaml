@@ -8,9 +8,10 @@ services:
       POSTGRES_DB: products-api
     ports:
       - 5432:5432
-    volumes:
-      - products-api-postgres:/var/lib/postgresql/data
-
-volumes:
-  products-api-postgres:
-    driver: local
+  redis:
+    image: 'redis:alpine'
+    restart: always
+    expose:
+      - '6379'
+    ports:
+      - '6379:6379'
