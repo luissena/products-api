@@ -6,7 +6,7 @@ import { EntityOrders } from 'src/shared/types/order';
 import { adaptFiltersToTypeormFilters } from 'src/typeorm/adapters';
 import { Product } from 'src/typeorm/entities/product.entity';
 import { UpsertProduct } from 'src/typeorm/types';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 export type ListProductsRequest = {
   pagination: IPaginationInput;
@@ -23,7 +23,10 @@ export class ProductsService {
 
   async list({ pagination, filters, order }: ListProductsRequest) {
     const [results, total] = await this.productsRepository.findAndCount({
-      where: adaptFiltersToTypeormFilters(filters),
+      where: {
+        ...adaptFiltersToTypeormFilters(filters),
+        deletedAt: IsNull(),
+      },
       skip: pagination.skip,
       take: pagination.limit,
       order,
@@ -46,5 +49,16 @@ export class ProductsService {
 
   async deleteAll() {
     await this.productsRepository.deleteAll();
+  }
+
+  async softDelete(id: string) {
+    await this.productsRepository.update(
+      {
+        id,
+      },
+      {
+        deletedAt: new Date(),
+      },
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Query } from '@nestjs/common';
 import { ListProductsDTO } from './dtos/list-products.dto';
 import { ProductsService } from './products.service';
 
@@ -13,5 +13,10 @@ export class ProductsController {
       filters,
       order,
     });
+  }
+
+  @Delete(':id')
+  softDelete(@Param('id') id: string) {
+    return this.productsService.softDelete(id);
   }
 }
