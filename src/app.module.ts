@@ -41,7 +41,6 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
     ContentfulModule,
     ReportsModule,
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_PIPE,

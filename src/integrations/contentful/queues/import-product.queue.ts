@@ -1,9 +1,9 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { ProductsService } from 'src/products/products.service';
-import { productMapper } from 'src/typeorm/mappers';
 import { QUEUES } from '../constants';
 import { ProductItem } from '../types';
+import { ProductsService } from './../../../products/products.service';
+import { productMapper } from './../../../typeorm/mappers';
 
 @Processor(QUEUES.importProduct)
 export class ImportProductQueue extends WorkerHost {

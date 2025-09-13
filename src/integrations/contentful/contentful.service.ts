@@ -5,9 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from 'bullmq';
 import { firstValueFrom } from 'rxjs';
-import { ProductsService } from 'src/products/products.service';
-import { SyncEntity } from 'src/typeorm/entities/sync.entity';
 import { Repository } from 'typeorm';
+import { ProductsService } from './../../products/products.service';
+import { SyncEntity } from './../../typeorm/entities/sync.entity';
 import { QUEUES } from './constants';
 import { ContentfulSyncResponse, EntriesResponse } from './types';
 

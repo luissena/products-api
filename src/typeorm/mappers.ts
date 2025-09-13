@@ -1,4 +1,4 @@
-import { ProductItem } from 'src/integrations/contentful/types';
+import { ProductItem } from './../integrations/contentful/types';
 import { INTEGRATIONS } from './constants';
 import { UpsertProduct } from './types';
 

@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityFilters } from 'src/shared/types/filter';
-import { adaptFiltersToTypeormFilters } from 'src/typeorm/adapters';
-import { Product } from 'src/typeorm/entities/product.entity';
 import { IsNull, Not, Repository } from 'typeorm';
+import { EntityFilters } from './../shared/types/filter';
+import { adaptFiltersToTypeormFilters } from './../typeorm/adapters';
+import { Product } from './../typeorm/entities/product.entity';
 
 export interface GetProductsReportsRequest {
   filters: EntityFilters<typeof Product>;
