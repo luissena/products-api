@@ -5,18 +5,18 @@ import { createNumberFilters } from '../../shared/dtos/number-filters';
 import { createTextFilters } from '../../shared/dtos/text-filters';
 import { CurrencyFiltersDTO } from './currency-filters.dto';
 
-const SKUFiltersDTO = createTextFilters('sku');
-const NameFiltersDTO = createTextFilters('name');
-const BrandFiltersDTO = createTextFilters('brand');
-const ModelFiltersDTO = createTextFilters('model');
-const CategoryFiltersDTO = createTextFilters('category');
-const ColorFiltersDTO = createTextFilters('color');
+const SKUFiltersDTO = createTextFilters();
+const NameFiltersDTO = createTextFilters();
+const BrandFiltersDTO = createTextFilters();
+const ModelFiltersDTO = createTextFilters();
+const CategoryFiltersDTO = createTextFilters();
+const ColorFiltersDTO = createTextFilters();
 
-const PriceFiltersDTO = createNumberFilters('price');
-const StockFiltersDTO = createNumberFilters('stock');
-const CreatedAtFiltersDTO = createDateFilters('createdAt');
-const UpdatedAtFiltersDTO = createDateFilters('updatedAt');
-const DeletedAtFiltersDTO = createDateFilters('deletedAt');
+const PriceFiltersDTO = createNumberFilters();
+const StockFiltersDTO = createNumberFilters();
+const CreatedAtFiltersDTO = createDateFilters();
+const UpdatedAtFiltersDTO = createDateFilters();
+const DeletedAtFiltersDTO = createDateFilters();
 
 export class ListProductsFiltersDTO {
   @ValidateNested()

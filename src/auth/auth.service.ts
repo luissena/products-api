@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async generateApiKey(payload: { username?: string; userId?: string } = {}) {
+  generateApiKey(payload: { username?: string; userId?: string } = {}) {
     const defaultPayload = {
       sub: payload.userId || 'api-user',
       username: payload.username || 'api-user',
@@ -16,10 +16,10 @@ export class AuthService {
     return this.jwtService.sign(defaultPayload);
   }
 
-  async validateApiKey(token: string) {
+  validateApiKey(token: string): any {
     try {
       return this.jwtService.verify(token);
-    } catch (error) {
+    } catch {
       return null;
     }
   }

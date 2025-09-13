@@ -83,8 +83,14 @@ export class ReportsService {
       };
     }
 
-    const deletedStats = await this.calculateGroupStats(baseFilters, true);
-    const notDeletedStats = await this.calculateGroupStats(baseFilters, false);
+    const deletedStats = await this.calculateGroupStats(
+      baseFilters || {},
+      true,
+    );
+    const notDeletedStats = await this.calculateGroupStats(
+      baseFilters || {},
+      false,
+    );
 
     return {
       total,
@@ -94,7 +100,7 @@ export class ReportsService {
   }
 
   private async calculateGroupStats(
-    baseFilters: any,
+    baseFilters: Record<string, any>,
     isDeleted: boolean,
   ): Promise<ProductStats> {
     const whereConditions = {

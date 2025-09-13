@@ -26,11 +26,17 @@ export class ContentfulService {
   ) {}
 
   async getProducts() {
-    const SPACE = this.configService.get('CONTENTFUL_SPACE_ID');
-    const ENVIRONMENT = this.configService.get('CONTENTFUL_ENVIRONMENT');
+    const SPACE = this.configService.get<string>('CONTENTFUL_SPACE_ID');
+    const ENVIRONMENT = this.configService.get<string>(
+      'CONTENTFUL_ENVIRONMENT',
+    );
 
-    const access_token = this.configService.get('CONTENTFUL_ACCESS_TOKEN');
-    const content_type = this.configService.get('CONTENTFUL_CONTENT_TYPE');
+    const access_token = this.configService.get<string>(
+      'CONTENTFUL_ACCESS_TOKEN',
+    );
+    const content_type = this.configService.get<string>(
+      'CONTENTFUL_CONTENT_TYPE',
+    );
 
     const response = await firstValueFrom(
       this.httpService.get<EntriesResponse>(
@@ -66,9 +72,15 @@ export class ContentfulService {
   }
 
   async initialSync() {
-    const CONTENTFUL_SPACE_ID = this.configService.get('CONTENTFUL_SPACE_ID');
-    const access_token = this.configService.get('CONTENTFUL_ACCESS_TOKEN');
-    const content_type = this.configService.get('CONTENTFUL_CONTENT_TYPE');
+    const CONTENTFUL_SPACE_ID = this.configService.get<string>(
+      'CONTENTFUL_SPACE_ID',
+    );
+    const access_token = this.configService.get<string>(
+      'CONTENTFUL_ACCESS_TOKEN',
+    );
+    const content_type = this.configService.get<string>(
+      'CONTENTFUL_CONTENT_TYPE',
+    );
 
     await this.productsService.deleteAll();
 
@@ -86,7 +98,7 @@ export class ContentfulService {
       ),
     );
 
-    this.importProductQueue.addBulk(
+    await this.importProductQueue.addBulk(
       data.items.map((product) => ({
         name: product.sys.id,
         data: product,
@@ -94,7 +106,7 @@ export class ContentfulService {
     );
 
     const { token } = await this.syncRepository.save({
-      token: data.nextPageUrl,
+      token: data.nextPageUrl as string,
     });
 
     await this.nextSync({
@@ -103,7 +115,9 @@ export class ContentfulService {
   }
 
   async nextSync({ token }: { token: string }): Promise<void> {
-    const access_token = this.configService.get('CONTENTFUL_ACCESS_TOKEN');
+    const access_token = this.configService.get<string>(
+      'CONTENTFUL_ACCESS_TOKEN',
+    );
 
     const { data } = await firstValueFrom(
       this.httpService.get<ContentfulSyncResponse>(token, {
@@ -113,7 +127,7 @@ export class ContentfulService {
       }),
     );
 
-    this.importProductQueue.addBulk(
+    await this.importProductQueue.addBulk(
       data.items.map((product) => ({
         name: product.sys.id,
         data: product,
@@ -125,7 +139,7 @@ export class ContentfulService {
     }
 
     const { token: newToken } = await this.syncRepository.save({
-      token: data.nextSyncUrl || data.nextPageUrl,
+      token: (data.nextSyncUrl || data.nextPageUrl) as string,
     });
 
     if (data.nextPageUrl) {

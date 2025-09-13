@@ -1,5 +1,5 @@
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
-import { Job, Queue } from 'bullmq';
+import { Queue } from 'bullmq';
 import { QUEUES } from '../constants';
 import { ContentfulService } from '../contentful.service';
 
@@ -18,7 +18,7 @@ export class SyncProductsQueue extends WorkerHost {
     });
   }
 
-  async process(job: Job<any, any, string>): Promise<any> {
-    this.contentfulService.sync();
+  async process(): Promise<any> {
+    await this.contentfulService.sync();
   }
 }

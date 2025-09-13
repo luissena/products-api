@@ -1,7 +1,7 @@
 import { AdvancedFilters } from '../types/filter';
 import { IsTextFilter } from './validators';
 
-export const createTextFilters = (propertyPrefix: string) => {
+export const createTextFilters = () => {
   class TextFilters implements Partial<AdvancedFilters<string>> {
     @IsTextFilter()
     equal?: string;

@@ -1,7 +1,7 @@
 import { AdvancedFilters } from '../types/filter';
 import { IsNumberFilter } from './validators';
 
-export const createNumberFilters = (propertyPrefix: string) => {
+export const createNumberFilters = () => {
   class NumberFilters implements Partial<AdvancedFilters<number>> {
     @IsNumberFilter()
     equal?: number;

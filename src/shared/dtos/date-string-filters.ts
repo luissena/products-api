@@ -1,7 +1,7 @@
 import { AdvancedFilters } from '../types/filter';
 import { IsDateFilter } from './validators';
 
-export const createDateFilters = (propertyPrefix: string) => {
+export const createDateFilters = () => {
   class DateFilters implements Partial<AdvancedFilters<Date>> {
     @IsDateFilter()
     equal?: Date;
