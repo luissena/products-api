@@ -14,10 +14,10 @@ export interface PriceReport {
   withoutPrice: number;
 }
 
-export interface ProductGroupStats {
+export type ProductGroupStats = {
   percentage: number;
   priceReport: PriceReport;
-}
+};
 
 export interface GetProductsReportsResponse {
   deletedProducts: ProductGroupStats;
