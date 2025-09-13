@@ -43,7 +43,7 @@ describe('JwtStrategy', () => {
 
       expect(() => {
         new JwtStrategy(mockConfigService as any);
-      }).toThrow('JWT_SECRET não está configurado');
+      }).toThrow('JWT_SECRET is not configured');
     });
 
     it('should throw error when JWT_SECRET is empty string', () => {
@@ -51,7 +51,7 @@ describe('JwtStrategy', () => {
 
       expect(() => {
         new JwtStrategy(mockConfigService as any);
-      }).toThrow('JWT_SECRET não está configurado');
+      }).toThrow('JWT_SECRET is not configured');
     });
 
     it('should initialize successfully when JWT_SECRET is configured', () => {
@@ -93,7 +93,7 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
       expect(() => {
         strategy.validate(null as any);
-      }).toThrow('Token inválido');
+      }).toThrow('Invalid token');
     });
 
     it('should throw UnauthorizedException when payload is undefined', () => {
@@ -102,7 +102,7 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
       expect(() => {
         strategy.validate(undefined as any);
-      }).toThrow('Token inválido');
+      }).toThrow('Invalid token');
     });
 
     it('should throw UnauthorizedException when payload.sub is missing', () => {
@@ -116,7 +116,7 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
       expect(() => {
         strategy.validate(invalidPayload);
-      }).toThrow('Token inválido');
+      }).toThrow('Invalid token');
     });
 
     it('should throw UnauthorizedException when payload.username is missing', () => {
@@ -130,7 +130,7 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
       expect(() => {
         strategy.validate(invalidPayload);
-      }).toThrow('Token inválido');
+      }).toThrow('Invalid token');
     });
 
     it('should throw UnauthorizedException when payload.sub is empty string', () => {
@@ -145,7 +145,7 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
       expect(() => {
         strategy.validate(invalidPayload);
-      }).toThrow('Token inválido');
+      }).toThrow('Invalid token');
     });
 
     it('should throw UnauthorizedException when payload.username is empty string', () => {
@@ -160,7 +160,7 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
       expect(() => {
         strategy.validate(invalidPayload);
-      }).toThrow('Token inválido');
+      }).toThrow('Invalid token');
     });
 
     it('should preserve additional properties in payload', () => {

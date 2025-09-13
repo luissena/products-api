@@ -20,11 +20,39 @@ import { ListProductsRequest } from './requests/list-products.request';
 import { SoftDeleteProductRequest } from './requests/soft-delete-product.request';
 import { ListProductsResponse } from './responses/list-products.response';
 
+/**
+ * Products Controller
+ *
+ * This controller handles HTTP requests related to product management.
+ * It provides endpoints for listing products with advanced filtering,
+ * pagination, sorting, and soft deletion operations.
+ *
+ * @class ProductsController
+ */
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
+  /**
+   * Creates an instance of ProductsController
+   *
+   * @param {ProductsService} productsService - Service for product-related business logic
+   */
   constructor(private readonly productsService: ProductsService) {}
 
+  /**
+   * Lists products with advanced filtering, pagination, and sorting capabilities
+   *
+   * This endpoint supports complex filtering using nested query parameters,
+   * configurable pagination, and sorting by any product field. The response
+   * includes both the product data and pagination metadata.
+   *
+   * @returns {Promise<Object>} Paginated list of products with metadata
+   * @returns {Product[]} returns.results - Array of product entities
+   * @returns {Object} returns.pagination - Pagination metadata
+   * @returns {number} returns.pagination.total - Total number of products matching filters
+   * @returns {number} returns.pagination.skip - Number of records skipped
+   * @returns {number} returns.pagination.limit - Number of records returned
+   */
   @Get()
   @ApiOperation({
     summary: 'List products with advanced filtering and pagination',
@@ -152,6 +180,20 @@ export class ProductsController {
     });
   }
 
+  /**
+   * Soft deletes a product by its ID
+   *
+   * This endpoint marks a product as deleted by setting its deletedAt timestamp.
+   * The product will not appear in future queries but remains in the database
+   * for audit purposes. Returns a success message or throws NotFoundException
+   * if the product doesn't exist.
+   *
+   * @param {SoftDeleteProductRequest} params - Request parameters
+   * @param {string} params.id - The UUID of the product to soft delete
+   * @returns {Promise<Object>} Success message
+   * @returns {string} returns.message - Success message confirming deletion
+   * @throws {NotFoundException} When product with the given ID is not found
+   */
   @Delete(':id')
   @ApiOperation({
     summary: 'Soft delete a product',

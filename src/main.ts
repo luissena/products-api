@@ -3,9 +3,31 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+/**
+ * Bootstrap function to initialize and start the NestJS application
+ *
+ * This function creates the NestJS application instance, configures Swagger documentation,
+ * and starts the server on the specified port. It sets up comprehensive API documentation
+ * with authentication support and organized endpoint tags.
+ *
+ * @async
+ * @function bootstrap
+ * @returns {Promise<void>} Resolves when the application is successfully started
+ *
+ * @example
+ * ```typescript
+ * // Application will start on port 3001 by default
+ * // Swagger documentation available at /api/docs
+ * bootstrap();
+ * ```
+ */
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Configure extended query parser for nested query parameters
   app.set('query parser', 'extended');
+
+  // Configure Swagger documentation
   const config = new DocumentBuilder()
     .setTitle('Products API')
     .setDescription(
@@ -28,10 +50,16 @@ async function bootstrap() {
     .addTag('Integrations', 'External service integrations')
     .addTag('Auth', 'Authentication operations')
     .build();
+
+  // Create Swagger document factory function
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 
+  // Setup Swagger UI at /api/docs
   SwaggerModule.setup('api/docs', app, documentFactory);
 
+  // Start the application server
   await app.listen(process.env.PORT ?? 3001);
 }
+
+// Start the application
 void bootstrap();

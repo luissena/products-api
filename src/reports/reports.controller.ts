@@ -13,13 +13,39 @@ import { ReportsService } from './reports.service';
 import { GetProductsReportRequest } from './requests/get-products-report.request';
 import { ProductsReportsResponse } from './responses/get-products-report.response';
 
+/**
+ * Reports Controller
+ *
+ * This controller handles HTTP requests related to product reporting and analytics.
+ * It provides endpoints for generating comprehensive product reports with advanced
+ * filtering capabilities. All endpoints require JWT authentication.
+ *
+ * @class ReportsController
+ */
 @ApiTags('Reports')
 @ApiBearerAuth('JWT-auth')
 @Controller('reports')
 @UseGuards(JwtAuthGuard)
 export class ReportsController {
+  /**
+   * Creates an instance of ReportsController
+   *
+   * @param {ReportsService} reportsService - Service for report generation and analytics
+   */
   constructor(private readonly reportsService: ReportsService) {}
 
+  /**
+   * Generates comprehensive product reports with advanced filtering
+   *
+   * This endpoint creates detailed reports about products including statistics
+   * for deleted and active products, price analysis, and percentage calculations.
+   * Reports can be filtered using the same advanced filtering system as the
+   * products listing endpoint. Requires JWT authentication.
+   *
+   * @returns {Promise<GetProductsReportsResponse>} Comprehensive product report with statistics
+   * @returns {ProductGroupStats} returns.deletedProducts - Statistics for deleted products
+   * @returns {ProductGroupStats} returns.notDeletedProducts - Statistics for active products
+   */
   @Get('products')
   @ApiOperation({
     summary: 'Generate comprehensive product reports',

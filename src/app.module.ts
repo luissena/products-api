@@ -8,11 +8,32 @@ import { ProductsModule } from './products/products.module';
 import { ReportsModule } from './reports/reports.module';
 import { Product } from './typeorm/entities/product.entity';
 import { SyncEntity } from './typeorm/entities/sync.entity';
+
+/**
+ * Root Application Module
+ *
+ * This is the main module that configures and imports all application modules.
+ * It sets up database connections, queue management, configuration, and validation.
+ * The module includes:
+ * - Global configuration management
+ * - PostgreSQL database connection with TypeORM
+ * - Redis connection for BullMQ queues
+ * - Product management module
+ * - Contentful integration module
+ * - Reports module
+ * - Global validation pipe
+ *
+ * @class AppModule
+ * @module AppModule
+ */
 @Module({
   imports: [
+    // Global configuration module for environment variables
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
+    // TypeORM configuration for PostgreSQL database
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -27,6 +48,8 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
       }),
       inject: [ConfigService],
     }),
+
+    // BullMQ configuration for Redis-based job queues
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -37,10 +60,14 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
       }),
       inject: [ConfigService],
     }),
+
+    // Feature modules
     ProductsModule,
     ContentfulModule,
     ReportsModule,
   ],
+
+  // Global providers
   providers: [
     {
       provide: APP_PIPE,
