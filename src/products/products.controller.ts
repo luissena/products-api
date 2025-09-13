@@ -145,7 +145,6 @@ export class ProductsController {
     },
   })
   list(@Query() { filters, pagination, order }: ListProductsRequest) {
-    console.log(filters);
     return this.productsService.list({
       pagination,
       filters,

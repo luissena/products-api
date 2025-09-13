@@ -41,8 +41,6 @@ export class ProductsService {
       order,
     });
 
-    console.log(adaptFiltersToTypeormFilters(filters ?? {}));
-
     return {
       results,
       pagination: {
