@@ -5,6 +5,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContentfulModule } from './integrations/contentful/contentful.module';
 import { ProductsModule } from './products/products.module';
+import { ReportsModule } from './reports/reports.module';
 import { Product } from './typeorm/entities/product.entity';
 import { SyncEntity } from './typeorm/entities/sync.entity';
 @Module({
@@ -38,6 +39,7 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
     }),
     ProductsModule,
     ContentfulModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [

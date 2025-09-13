@@ -19,25 +19,25 @@ export class Product {
   @Column({ type: 'varchar', length: 100 })
   model: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   category: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   color: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   price: number;
 
-  @Column({ type: 'varchar', length: 3 })
+  @Column({ type: 'varchar', length: 3, nullable: true })
   currency: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   stock: number;
 
-  @Column({ type: 'varchar', length: 36 })
+  @Column({ type: 'varchar', length: 36, nullable: true })
   externalId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   integration: string;
 
   @Column({ type: 'timestamptz' })
