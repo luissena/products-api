@@ -67,7 +67,7 @@ describe('ProductsController (e2e)', () => {
 
   it('should return a 400 if the id is not a valid uuid', async () => {
     await request(app.getHttpServer())
-      .delete('/products/123e4567-e89b-12d3-a456-426614174000')
+      .delete('/products/invalid-uuid')
       .expect(400);
   });
 
