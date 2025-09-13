@@ -1,4 +1,11 @@
-import { Controller, Delete, Get, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -8,8 +15,9 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { ListProductsDTO } from './dtos/list-products.dto';
 import { ProductsService } from './products.service';
+import { ListProductsRequest } from './requests/list-products.request';
+import { SoftDeleteProductRequest } from './requests/soft-delete-product.request';
 import { ListProductsResponse } from './responses/list-products.response';
 
 @ApiTags('Products')
@@ -136,7 +144,7 @@ export class ProductsController {
       },
     },
   })
-  list(@Query() { filters, pagination, order }: ListProductsDTO) {
+  list(@Query() { filters, pagination, order }: ListProductsRequest) {
     console.log(filters);
     return this.productsService.list({
       pagination,
@@ -187,12 +195,20 @@ export class ProductsController {
       type: 'object',
       properties: {
         statusCode: { type: 'integer', example: 400 },
-        message: { type: 'string', example: 'Invalid UUID format' },
+        message: { type: 'string', example: 'id must be a UUID' },
         error: { type: 'string', example: 'Bad Request' },
       },
     },
   })
-  softDelete(@Param('id') id: string) {
-    return this.productsService.softDelete(id);
+  async softDelete(@Param() { id }: SoftDeleteProductRequest) {
+    const result = await this.productsService.softDelete(id);
+
+    if (result === 0) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return {
+      message: 'Product soft deleted successfully',
+    };
   }
 }

@@ -1,10 +1,10 @@
 import { Type } from 'class-transformer';
 import { IsOptional, ValidateNested } from 'class-validator';
-import { ListProductsFiltersDTO } from './list-products-filters.dto';
-import { ListProductsOrdersDTO } from './list-products-orders.dto';
-import { ListProductsPaginationDTO } from './list-products-pagination.dto';
+import { ListProductsFiltersDTO } from '../dtos/list-products-filters.dto';
+import { ListProductsOrdersDTO } from '../dtos/list-products-orders.dto';
+import { ListProductsPaginationDTO } from '../dtos/list-products-pagination.dto';
 
-export class ListProductsDTO {
+export class ListProductsRequest {
   @IsOptional()
   @ValidateNested()
   @Type(() => ListProductsPaginationDTO)

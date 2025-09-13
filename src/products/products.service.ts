@@ -64,7 +64,7 @@ export class ProductsService {
   }
 
   async softDelete(id: string) {
-    await this.productsRepository.update(
+    const result = await this.productsRepository.update(
       {
         id,
       },
@@ -72,5 +72,7 @@ export class ProductsService {
         deletedAt: new Date(),
       },
     );
+
+    return result.affected;
   }
 }

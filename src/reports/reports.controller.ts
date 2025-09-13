@@ -9,8 +9,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { GetProductsReportsDTO } from './dtos/get-products-reports.dto';
-import { GetProductsReportsRequest, ReportsService } from './reports.service';
+import { ReportsService } from './reports.service';
+import { GetProductsReportRequest } from './requests/get-products-report.request';
 import { ProductsReportsResponse } from './responses/get-products-report.response';
 
 @ApiTags('Reports')
@@ -67,8 +67,7 @@ export class ReportsController {
       },
     },
   })
-  async getProductsReport(@Query() { filters }: GetProductsReportsDTO) {
-    const request: GetProductsReportsRequest = { filters };
-    return this.reportsService.get(request);
+  async getProductsReport(@Query() { filters }: GetProductsReportRequest) {
+    return this.reportsService.get({ filters });
   }
 }
