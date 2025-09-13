@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from 'src/products/products.module';
 import { SyncEntity } from 'src/typeorm/entities/sync.entity';
 import { QUEUES } from './constants';
-import { ContentfulController } from './contentful.controller';
 import { ContentfulService } from './contentful.service';
 import { ImportProductQueue } from './queues/import-product.queue';
 import { SyncProductsQueue } from './queues/sync-products';
@@ -25,6 +24,6 @@ import { SyncProductsQueue } from './queues/sync-products';
   ],
   providers: [ContentfulService, SyncProductsQueue, ImportProductQueue],
   exports: [ContentfulService],
-  controllers: [ContentfulController],
+  controllers: [],
 })
 export class ContentfulModule {}
