@@ -1,22 +1,14 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { Test } from '@nestjs/testing';
 import * as dotenv from 'dotenv';
 import request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { ReportsResponse, TestUtils } from './test-utils';
 dotenv.config();
 
 describe('ReportsController (e2e)', () => {
   let app: NestExpressApplication;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleRef.createNestApplication();
-    app.set('query parser', 'extended');
-
-    await app.init();
+    app = await TestUtils.createTestApp();
   });
 
   it('should return a report of products', async () => {
@@ -27,24 +19,17 @@ describe('ReportsController (e2e)', () => {
       .set('Authorization', `Bearer ${apiKey}`)
       .expect(200);
 
-    expect(response.body).toHaveProperty('deletedProducts');
-    expect(response.body).toHaveProperty('notDeletedProducts');
-    expect(response.body.deletedProducts).toHaveProperty('percentage');
-    expect(response.body.notDeletedProducts).toHaveProperty('percentage');
-    expect(response.body.deletedProducts).toHaveProperty('priceReport');
-    expect(response.body.notDeletedProducts).toHaveProperty('priceReport');
-    expect(response.body.deletedProducts.priceReport).toHaveProperty(
-      'withPrice',
-    );
-    expect(response.body.deletedProducts.priceReport).toHaveProperty(
-      'withoutPrice',
-    );
-    expect(response.body.notDeletedProducts.priceReport).toHaveProperty(
-      'withPrice',
-    );
-    expect(response.body.notDeletedProducts.priceReport).toHaveProperty(
-      'withoutPrice',
-    );
+    const body = response.body as ReportsResponse;
+    expect(body).toHaveProperty('deletedProducts');
+    expect(body).toHaveProperty('notDeletedProducts');
+    expect(body.deletedProducts).toHaveProperty('percentage');
+    expect(body.notDeletedProducts).toHaveProperty('percentage');
+    expect(body.deletedProducts).toHaveProperty('priceReport');
+    expect(body.notDeletedProducts).toHaveProperty('priceReport');
+    expect(body.deletedProducts.priceReport).toHaveProperty('withPrice');
+    expect(body.deletedProducts.priceReport).toHaveProperty('withoutPrice');
+    expect(body.notDeletedProducts.priceReport).toHaveProperty('withPrice');
+    expect(body.notDeletedProducts.priceReport).toHaveProperty('withoutPrice');
   });
 
   //   unauthenticated
@@ -60,6 +45,6 @@ describe('ReportsController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await TestUtils.closeTestApp(app);
   });
 });

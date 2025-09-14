@@ -13,6 +13,11 @@ export class SyncProductsQueue extends WorkerHost {
   }
 
   async onModuleInit() {
+    // Skip recurring job initialization during tests
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
+
     await this.syncProductsQueue.upsertJobScheduler(QUEUES.syncProducts, {
       every: 1000 * 60 * 60,
     });

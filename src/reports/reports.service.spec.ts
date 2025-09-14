@@ -1,12 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Product } from '../typeorm/entities/product.entity';
 import { GetProductsReportsRequest, ReportsService } from './reports.service';
 
+// Interface para testes que expõe métodos privados
+interface ReportsServiceForTesting extends ReportsService {
+  calculateGroupStats(
+    baseFilters: Record<string, unknown>,
+    isDeleted: boolean,
+  ): Promise<{ total: number; withPrice: number; withoutPrice: number }>;
+  buildGroupStats(
+    groupStats: { total: number; withPrice: number; withoutPrice: number },
+    totalProducts: number,
+  ): {
+    percentage: number;
+    priceReport: { withPrice: number; withoutPrice: number };
+  };
+  roundToTwoDecimals(value: number): number;
+}
+
 describe('ReportsService', () => {
   let service: ReportsService;
-  let repository: Repository<Product>;
 
   const mockRepository = {
     count: jest.fn(),
@@ -24,7 +38,6 @@ describe('ReportsService', () => {
     }).compile();
 
     service = module.get<ReportsService>(ReportsService);
-    repository = module.get<Repository<Product>>(getRepositoryToken(Product));
   });
 
   afterEach(() => {
@@ -162,10 +175,8 @@ describe('ReportsService', () => {
         .mockResolvedValueOnce(15); // with price for deleted
 
       // Usando reflection para testar método privado
-      const calculateGroupStats = (service as any).calculateGroupStats.bind(
-        service,
-      );
-      const result = await calculateGroupStats(baseFilters, true);
+      const testService = service as ReportsServiceForTesting;
+      const result = await testService.calculateGroupStats(baseFilters, true);
 
       expect(result).toEqual({
         total: 20,
@@ -181,10 +192,8 @@ describe('ReportsService', () => {
         .mockResolvedValueOnce(80) // total for not deleted
         .mockResolvedValueOnce(70); // with price for not deleted
 
-      const calculateGroupStats = (service as any).calculateGroupStats.bind(
-        service,
-      );
-      const result = await calculateGroupStats(baseFilters, false);
+      const testService = service as ReportsServiceForTesting;
+      const result = await testService.calculateGroupStats(baseFilters, false);
 
       expect(result).toEqual({
         total: 80,
@@ -197,8 +206,8 @@ describe('ReportsService', () => {
       const groupStats = { total: 25, withPrice: 20, withoutPrice: 5 };
       const totalProducts = 100;
 
-      const buildGroupStats = (service as any).buildGroupStats.bind(service);
-      const result = buildGroupStats(groupStats, totalProducts);
+      const testService = service as ReportsServiceForTesting;
+      const result = testService.buildGroupStats(groupStats, totalProducts);
 
       expect(result).toEqual({
         percentage: 25,
@@ -213,8 +222,8 @@ describe('ReportsService', () => {
       const groupStats = { total: 0, withPrice: 0, withoutPrice: 0 };
       const totalProducts = 0;
 
-      const buildGroupStats = (service as any).buildGroupStats.bind(service);
-      const result = buildGroupStats(groupStats, totalProducts);
+      const testService = service as ReportsServiceForTesting;
+      const result = testService.buildGroupStats(groupStats, totalProducts);
 
       expect(result).toEqual({
         percentage: 0,
@@ -226,14 +235,12 @@ describe('ReportsService', () => {
     });
 
     it('should round values to two decimal places', () => {
-      const roundToTwoDecimals = (service as any).roundToTwoDecimals.bind(
-        service,
-      );
+      const testService = service as ReportsServiceForTesting;
 
-      expect(roundToTwoDecimals(33.333333)).toBe(33.33);
-      expect(roundToTwoDecimals(66.666666)).toBe(66.67);
-      expect(roundToTwoDecimals(100)).toBe(100);
-      expect(roundToTwoDecimals(0)).toBe(0);
+      expect(testService.roundToTwoDecimals(33.333333)).toBe(33.33);
+      expect(testService.roundToTwoDecimals(66.666666)).toBe(66.67);
+      expect(testService.roundToTwoDecimals(100)).toBe(100);
+      expect(testService.roundToTwoDecimals(0)).toBe(0);
     });
   });
 });

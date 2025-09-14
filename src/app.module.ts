@@ -48,7 +48,7 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
     }),
     CacheModule.registerAsync({
       isGlobal: true,
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
           stores: [new KeyvRedis(configService.get('REDIS_URL'))],
         };

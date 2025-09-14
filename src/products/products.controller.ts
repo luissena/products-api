@@ -18,7 +18,7 @@ import {
   ApiTags,
   ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
-import { RateLimitResponse } from 'src/shared/responses/rate-limit.response';
+import { RateLimitResponse } from '../shared/responses/rate-limit.response';
 import { ProductsService } from './products.service';
 import { ListProductsRequest } from './requests/list-products.request';
 import { SoftDeleteProductRequest } from './requests/soft-delete-product.request';

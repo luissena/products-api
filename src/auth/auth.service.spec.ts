@@ -1,29 +1,34 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MockFactory } from '../../test/test-utils';
 import { AuthService } from './auth.service';
+
+interface JwtPayload {
+  sub: string;
+  username: string;
+  type: string;
+  iat: number;
+}
 
 describe('AuthService', () => {
   let service: AuthService;
-  let jwtService: JwtService;
-
-  const mockJwtService = {
-    sign: jest.fn(),
-    verify: jest.fn(),
-  };
+  let mockJwtService: jest.Mocked<JwtService>;
 
   beforeEach(async () => {
+    const jwtServiceMock = MockFactory.createJwtServiceMock();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         {
           provide: JwtService,
-          useValue: mockJwtService,
+          useValue: jwtServiceMock,
         },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    jwtService = module.get<JwtService>(JwtService);
+    mockJwtService = module.get(JwtService);
   });
 
   afterEach(() => {
@@ -39,7 +44,7 @@ describe('AuthService', () => {
       const mockToken = 'mock-jwt-token';
       mockJwtService.sign.mockReturnValue(mockToken);
 
-      const result = service.generateApiKey();
+      const result: string = service.generateApiKey();
 
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         sub: 'api-user',
@@ -58,7 +63,7 @@ describe('AuthService', () => {
       };
       mockJwtService.sign.mockReturnValue(mockToken);
 
-      const result = service.generateApiKey(customPayload);
+      const result: string = service.generateApiKey(customPayload);
 
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         sub: 'user-123',
@@ -76,7 +81,7 @@ describe('AuthService', () => {
       };
       mockJwtService.sign.mockReturnValue(mockToken);
 
-      const result = service.generateApiKey(partialPayload);
+      const result: string = service.generateApiKey(partialPayload);
 
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         sub: 'api-user',
@@ -95,7 +100,7 @@ describe('AuthService', () => {
       service.generateApiKey();
 
       const afterCall = Math.floor(Date.now() / 1000);
-      const callArgs = mockJwtService.sign.mock.calls[0][0];
+      const callArgs = mockJwtService.sign.mock.calls[0][0] as JwtPayload;
 
       expect(callArgs.iat).toBeGreaterThanOrEqual(beforeCall);
       expect(callArgs.iat).toBeLessThanOrEqual(afterCall);
@@ -104,7 +109,7 @@ describe('AuthService', () => {
 
   describe('validateApiKey', () => {
     it('should return payload when token is valid', () => {
-      const mockPayload = {
+      const mockPayload: JwtPayload = {
         sub: 'user-123',
         username: 'test-user',
         type: 'api-key',
@@ -112,7 +117,7 @@ describe('AuthService', () => {
       };
       mockJwtService.verify.mockReturnValue(mockPayload);
 
-      const result = service.validateApiKey('valid-token');
+      const result: JwtPayload | null = service.validateApiKey('valid-token');
 
       expect(mockJwtService.verify).toHaveBeenCalledWith('valid-token');
       expect(result).toEqual(mockPayload);
@@ -123,7 +128,7 @@ describe('AuthService', () => {
         throw new Error('Invalid token');
       });
 
-      const result = service.validateApiKey('invalid-token');
+      const result: JwtPayload | null = service.validateApiKey('invalid-token');
 
       expect(mockJwtService.verify).toHaveBeenCalledWith('invalid-token');
       expect(result).toBeNull();
@@ -134,7 +139,7 @@ describe('AuthService', () => {
         throw new Error('Token expired');
       });
 
-      const result = service.validateApiKey('expired-token');
+      const result: JwtPayload | null = service.validateApiKey('expired-token');
 
       expect(result).toBeNull();
     });
@@ -144,7 +149,8 @@ describe('AuthService', () => {
         throw new Error('Malformed token');
       });
 
-      const result = service.validateApiKey('malformed-token');
+      const result: JwtPayload | null =
+        service.validateApiKey('malformed-token');
 
       expect(result).toBeNull();
     });

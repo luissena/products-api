@@ -16,8 +16,8 @@ import {
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { RateLimitResponse } from 'src/shared/responses/rate-limit.response';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RateLimitResponse } from '../shared/responses/rate-limit.response';
 import { ReportsService } from './reports.service';
 import { GetProductsReportRequest } from './requests/get-products-report.request';
 import { ProductsReportsResponse } from './responses/get-products-report.response';
