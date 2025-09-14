@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { IPaginationInput } from './../shared/interfaces/pagination.interface';
@@ -45,6 +46,7 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   /**
@@ -126,6 +128,8 @@ export class ProductsService {
     await this.productsRepository.upsert(product, {
       conflictPaths: ['integration', 'externalId'],
     });
+    // clear cache
+    await this.cacheManager.clear();
   }
 
   /**
@@ -144,6 +148,7 @@ export class ProductsService {
    */
   async deleteAll(): Promise<void> {
     await this.productsRepository.deleteAll();
+    await this.cacheManager.clear();
   }
 
   /**
@@ -174,6 +179,8 @@ export class ProductsService {
         deletedAt: new Date(),
       },
     );
+
+    await this.cacheManager.clear();
 
     return result.affected || 0;
   }

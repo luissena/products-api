@@ -1,3 +1,4 @@
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import {
   Controller,
   Delete,
@@ -5,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -14,7 +16,9 @@ import {
   ApiParam,
   ApiQuery,
   ApiTags,
+  ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
+import { RateLimitResponse } from 'src/shared/responses/rate-limit.response';
 import { ProductsService } from './products.service';
 import { ListProductsRequest } from './requests/list-products.request';
 import { SoftDeleteProductRequest } from './requests/soft-delete-product.request';
@@ -172,6 +176,11 @@ export class ProductsController {
       },
     },
   })
+  @ApiTooManyRequestsResponse({
+    type: RateLimitResponse,
+  })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(1000 * 60 * 60 * 24)
   list(@Query() { filters, pagination, order }: ListProductsRequest) {
     return this.productsService.list({
       pagination,
@@ -218,6 +227,9 @@ export class ProductsController {
         },
       },
     },
+  })
+  @ApiTooManyRequestsResponse({
+    type: RateLimitResponse,
   })
   @ApiNotFoundResponse({
     description: 'Product not found',

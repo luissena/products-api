@@ -1,4 +1,11 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -6,8 +13,10 @@ import {
   ApiOperation,
   ApiQuery,
   ApiTags,
+  ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { RateLimitResponse } from 'src/shared/responses/rate-limit.response';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ReportsService } from './reports.service';
 import { GetProductsReportRequest } from './requests/get-products-report.request';
@@ -82,6 +91,9 @@ export class ReportsController {
       },
     },
   })
+  @ApiTooManyRequestsResponse({
+    type: RateLimitResponse,
+  })
   @ApiBadRequestResponse({
     description: 'Invalid filter parameters',
     schema: {
@@ -93,6 +105,8 @@ export class ReportsController {
       },
     },
   })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(1000 * 60 * 60 * 24)
   async getProductsReport(@Query() { filters }: GetProductsReportRequest) {
     return this.reportsService.get({ filters });
   }

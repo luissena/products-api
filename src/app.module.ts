@@ -1,7 +1,11 @@
+import KeyvRedis from '@keyv/redis';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { BullModule } from '@nestjs/bullmq';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { seconds, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContentfulModule } from './integrations/contentful/contentful.module';
 import { ProductsModule } from './products/products.module';
@@ -32,7 +36,25 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        throttlers: [{ limit: 10, ttl: seconds(10) }],
+        storage: new ThrottlerStorageRedisService(
+          configService.get('REDIS_URL'),
+        ),
+      }),
+      inject: [ConfigService],
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async (configService: ConfigService) => {
+        return {
+          stores: [new KeyvRedis(configService.get('REDIS_URL'))],
+        };
+      },
+      inject: [ConfigService],
+    }),
     // TypeORM configuration for PostgreSQL database
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -75,6 +97,13 @@ import { SyncEntity } from './typeorm/entities/sync.entity';
         transform: true,
         whitelist: true,
       }),
+    },
+    {
+      /**
+       * This applies the rate-lite to all endpoints
+       */
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
