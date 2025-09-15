@@ -1,98 +1,98 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Products API - Technical Challenge Solution 🚀
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS-based REST API for product management that synchronizes with Contentful API.  
+This project was developed in approximately **5 hours** as part of the technical challenge.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Challenge Requirements Met
 
-## Description
+- ✅ **Automated Contentful Sync**: Hourly synchronization with Contentful API using BullMQ scheduler
+- ✅ **Public Product API**: Paginated product listing (max 5 items) with advanced filtering
+- ✅ **Private Reports Module**: JWT-protected analytics with custom reporting capabilities
+- ✅ **Soft Delete Functionality**: Products remain deleted across application restarts
+- ✅ **Comprehensive Testing**: >80% test coverage with unit and E2E tests
+- ⚠️ **Limitations due to time**:
+  - No full Dockerization (only `docker-compose` for Postgres and Redis in development)
+  - No database migrations implemented
+  - Database schema and delete mechanism could be further refined using Contentful’s delete subscriptions
+  - No GitHub Actions CI/CD configured
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 🏗️ Architecture & Technology Stack
 
-```bash
-$ npm install
-```
+- **Framework**: NestJS with TypeScript (Node.js 22 LTS)
+- **Database**: PostgreSQL with TypeORM
+- **Queue System**: BullMQ for Contentful synchronization
+- **Caching**: Redis
+- **Authentication**: JWT-based
+- **API Docs**: Swagger/OpenAPI at `/api`
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 🚀 How to Run
 
-# watch mode
-$ npm run start:dev
+You can run the project **locally with Node.js** or using **Docker Compose** for dependencies.
 
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+### 1. Running with Docker Compose (Postgres + Redis)
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Start Postgres and Redis
+docker-compose up -d
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Install Dependencies
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 3. Environment Variables
 
-## Resources
+Copy the example environment file and adjust the values:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+cp .env.example .env
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Run the Application
 
-## Support
+```bash
+npm run start:dev
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 5. Generate an API Key (for private modules)
 
-## Stay in touch
+```bash
+npm run generate:api-key
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Use the generated API key as a **Bearer Token** when calling private endpoints.
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 📊 API Examples
+
+### Public Endpoint: List Products
+
+```http
+GET /products?pagination[skip]=0&pagination[limit]=5&filters[name][contains]=iPhone
+```
+
+### Private Endpoint: Reports (JWT Required)
+
+```http
+GET /reports/products
+Authorization: Bearer <jwt-token>
+```
+
+---
+
+## 📝 Notes
+
+- This project was completed in **~5 hours**.
+- The focus was on covering the **core requirements** of the challenge.
+- Several areas (migrations, advanced delete handling, CI/CD, production Docker setup) were left for future improvements.
+
+---
+
+**Thank you for reviewing this solution!** 🚀
