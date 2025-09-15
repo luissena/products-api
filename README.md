@@ -25,7 +25,7 @@ This project was developed in approximately **5 hours** as part of the technical
 - **Queue System**: BullMQ for Contentful synchronization
 - **Caching**: Redis
 - **Authentication**: JWT-based
-- **API Docs**: Swagger/OpenAPI at `/api`
+- **API Docs**: Swagger/OpenAPI at `/api/docs`
 
 ---
 
